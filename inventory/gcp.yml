@@ -2,9 +2,9 @@
 all:
   vars:
     # GKE cluster variables
-    gcp_project: <project_name> # ID of GCP Project
+    gcp_project: smooth-tendril-478016-n0 # ID of GCP Project
     gcp_auth_kind: serviceaccount # Do not change
-    gcp_cred_file: <path_service_account> # Path to service account keys (json file downloaded from GCP)
+    gcp_cred_file: ./smooth-tendril-478016-n0-ce783a4d2a06.json # Path to service account keys (json file downloaded from GCP)
 
     gcp_zone: us-central1-a
     gcp_image_type: ubuntu_containerd

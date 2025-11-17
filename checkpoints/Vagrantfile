@@ -7,8 +7,8 @@
 # you're doing.
 
 #Variables
-PUBLIC_KEY_PATH = "~/.ssh/id_rsa.pub" #Change me if needed!
-PRIVATE_KEY_PATH = "~/.ssh/id_rsa"  #Change me if needed!
+PUBLIC_KEY_PATH = "~/.ssh/ascn.pub" #Change me if needed!
+PRIVATE_KEY_PATH = "~/.ssh/ascn"  #Change me if needed!
 READ_PUBLIC_KEY = File.read(File.expand_path(PUBLIC_KEY_PATH)).strip
 
 # TP VM
@@ -30,7 +30,7 @@ Vagrant.configure("2") do |config|
     tp.vm.network :private_network, ip: TP_VM_IP
     tp.vm.provision :shell, privileged: true, inline: $provision
     tp.vm.provision :file, source: "./checkpoint.sh", destination: "~/checkpoint.sh"
-    tp.vm.provision :file, source: "../../codebase", destination: "~/codebase"
+    tp.vm.provision :file, source: "../.", destination: "~/codebase"
   end
 
 end
