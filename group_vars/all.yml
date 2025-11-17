@@ -1,0 +1,7 @@
+# Database configurations
+db_network: dnet
+db_host: postgres-db
+db_image: postgres:latest
+db_name: airtrail
+db_username: airtrail_user
+db_password: airtrail_secret

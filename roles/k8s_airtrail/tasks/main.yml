@@ -1,0 +1,29 @@
+- name: "Deploy AirTrail"
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', 'airtrail-deployment.yml') | from_yaml }}"
+    wait: true
+
+- name: "Create a service for exposing AirTrail"
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', 'airtrail-service.yml') | from_yaml }}"
+    wait: true
+
+- name: "Wait till AirTrail pod is created"
+  kubernetes.core.k8s_info:
+    kind: Pod
+    namespace: default 
+    label_selectors:
+      - app=airtrail
+    wait: true
+    wait_sleep: 5
+    wait_timeout: 180
+  register: airtrail_pod_info
+
+- name: "Seed the database"
+  kubernetes.core.k8s_exec:
+    namespace: default
+    pod: "{{ airtrail_pod_info.resources[0].metadata.name }}"
+    command: php artisan db:seed
+  when: seed_db is defined and seed_db
