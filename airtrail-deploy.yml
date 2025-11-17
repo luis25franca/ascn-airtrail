@@ -1,3 +1,9 @@
 ---
-# Playbook to deploy Airtrail and its components
-# TO DO
+- name: "Install Airtrail & Postgres with Kubernetes"
+  hosts: localhost
+  gather_facts: false
+  roles:
+    - role: k8s-postgres
+      tags: ["posgres"]
+    - role: k8s-airtrail
+      tags: ["airtrail"]
