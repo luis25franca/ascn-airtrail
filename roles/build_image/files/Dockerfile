@@ -27,6 +27,8 @@ WORKDIR /AirTrail
 # Install Bun dependencies
 RUN bun install
 
+ENV NODE_OPTIONS="--max-old-space-size=4096"
+
 RUN bun run build
 
 # Create Airtrail configuration file

@@ -20,10 +20,3 @@
     wait_sleep: 5
     wait_timeout: 180
   register: airtrail_pod_info
-
-- name: "Seed the database"
-  kubernetes.core.k8s_exec:
-    namespace: default
-    pod: "{{ airtrail_pod_info.resources[0].metadata.name }}"
-    command: php artisan db:seed
-  when: seed_db is defined and seed_db
