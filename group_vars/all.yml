@@ -5,3 +5,7 @@ db_image: postgres:latest
 db_name: airtrail
 db_username: airtrail_user
 db_password: airtrail_secret
+# Derive DB URL from components so it follows the configured `db_host`.
+# The Postgres Service name used by the role is `{{ db_host }}` (see postgres-service.yml).
+db_url: "postgres://{{ db_username }}:{{ db_password }}@{{ db_host }}:5432/{{ db_name }}"
+

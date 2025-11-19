@@ -6,7 +6,9 @@ metadata:
 spec:
   accessModes:
   - ReadWriteOnce
-  storageClassName: local-storage
   resources:
     requests:
       storage: 10Gi
+  {% if pvc_storage_class is defined and pvc_storage_class | length > 0 %}
+  storageClassName: "{{ pvc_storage_class }}"
+  {% endif %}

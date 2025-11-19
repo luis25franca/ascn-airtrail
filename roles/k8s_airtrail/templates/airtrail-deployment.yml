@@ -19,11 +19,13 @@ spec:
       - name: airtrail
         image: "{{ airtrail_image }}"
         env:
+        - name: DATABASE_URL
+          value: "{{ db_url }}"
         - name: DB_HOST
           value: "{{ db_host }}"
         - name: DB_URL
           value: "{{ db_url }}"
-        - name: DB_DATABASE
+        - name: DB_DATABASE_NAME
           value: "{{ db_name }}"
         - name: DB_USERNAME
           value: "{{ db_username }}"

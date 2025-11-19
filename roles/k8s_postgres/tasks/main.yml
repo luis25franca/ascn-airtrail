@@ -1,5 +1,5 @@
 - name: Create a PVC for PostgreSQL
-  kubernets.core.k8s:
+  kubernetes.core.k8s:
     definition: "{{ lookup('template', 'postgres-pvc.yml') | from_yaml }}"
     state: present
     wait: true
@@ -28,12 +28,12 @@
     wait_timeout: 180
   register: postgres_pod_info
 
-- name: Wait until PostgreSQL is ready to accept connections
-  kubernetes.core.k8s_exec:
-    namespace: default
-    pod: "{{ postgres_pod_info.resources[0].metadata.name }}"
-    command: PGPASSWORD="{{ db_password }}" psql -U "{{ db_username }}" -c "\l"
-  register: postgres_login
-  retries: 3
-  delay: 10
-  until: postgres_login.rc == 0
+#- name: Wait until PostgreSQL is ready to accept connections
+#  kubernetes.core.k8s_exec:
+#    namespace: default
+#    pod: "{{ postgres_pod_info.resources[0].metadata.name }}"
+#    command: PGPASSWORD="{{ db_password }}" psql -U "{{ db_username }}" -c "\l"
+#  register: postgres_login
+#  retries: 3
+#  delay: 10
+#  until: postgres_login.rc == 0

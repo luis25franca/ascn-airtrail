@@ -1,0 +1,4 @@
+airtrail_image: "airtrail:v3"       
+registry_url: "docker.io/luis25franca"  
+build: true
+docker_build_dir: /tmp/airtrail

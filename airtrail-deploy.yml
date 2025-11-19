@@ -3,17 +3,11 @@
   hosts: localhost
   gather_facts: false
   roles:
-    - role: k8s-postgres
-      tags: ["posgres"]
-    - role: k8s-airtrail
+    - role: setup-gcloud
+      tags: ["setup-gcloud"]
+    - role: k8s_postgres
+      tags: ["postgres"]
+    - role: build_image
+      tags: ["build_image"] 
+    - role: k8s_airtrail
       tags: ["airtrail"]
-
-  vars:
-    db_user: airtrail_user
-    db_password: airtrail_secret
-    db_name: airtrail
-    db_host: postgres-service
-    db_port: 5432
-
-    airtrail_origins: "http://localhost:3000"
-    airtrail_env: production

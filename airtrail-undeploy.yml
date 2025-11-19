@@ -1,3 +1,15 @@
 ---
-# Playbook to deploy Airtrail and its components
-# TO DO
+- name: "Remove Airtrail & Postgres from Kubernetes"
+  hosts: localhost
+  gather_facts: false
+  roles:
+    - role: k8s-airtrail
+      tags: ["airtrail"]
+      vars:
+        state: absent
+
+    - role: k8s-postgres
+      tags: ["postgres"]
+      vars:
+        state: absent
+

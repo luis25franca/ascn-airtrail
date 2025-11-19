@@ -1,0 +1,4 @@
+---
+# Defaults for k8s_postgres
+# If pvc_storage_class is empty, the cluster default StorageClass will be used.
+pvc_storage_class: ""

@@ -1,0 +1,9 @@
+- name: Update kubeconfig for GKE cluster
+  ansible.builtin.shell: |
+    gcloud container clusters get-credentials ascn-cluster \
+      --zone "{{ gcp_zone }}" \
+      --project "{{ gcp_project }}"
+  environment:
+    GOOGLE_APPLICATION_CREDENTIALS: "{{ gcp_cred_file }}"
+  register: kubeconfig_update
+  changed_when: "'Fetching cluster endpoint' in kubeconfig_update.stdout"
