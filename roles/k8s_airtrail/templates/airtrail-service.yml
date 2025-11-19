@@ -6,7 +6,7 @@ metadata:
     app: airtrail
   namespace: default
 spec:
-  type: NodePort # Makes the service accessible on a static port on each Node in the cluster.
+  type: LoadBalancer # Makes the service accessible on a static port on each Node in the cluster.
   selector:
     app: airtrail
   ports:

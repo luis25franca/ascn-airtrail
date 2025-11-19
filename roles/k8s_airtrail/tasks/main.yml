@@ -20,3 +20,20 @@
     wait_sleep: 5
     wait_timeout: 180
   register: airtrail_pod_info
+
+- name: "Get AirTrail service info"
+  kubernetes.core.k8s_info:
+    kind: Service
+    name: airtrail-service
+    namespace: default
+  register: airtrail_service_info
+
+- name: "Set AirTrail external IP fact"
+  set_fact:
+    app_ip: >-
+      {{ airtrail_service_info.resources[0].status.loadBalancer.ingress[0].ip
+         | default(airtrail_service_info.resources[0].status.loadBalancer.ingress[0].hostname, true) }}
+
+- name: "Set AirTrail external port fact"
+  set_fact:
+    app_port: "{{ airtrail_service_info.resources[0].spec.ports[0].port }}"
