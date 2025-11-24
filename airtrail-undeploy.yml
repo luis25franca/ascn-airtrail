@@ -3,13 +3,6 @@
   hosts: localhost
   gather_facts: false
   roles:
-    - role: k8s-airtrail
-      tags: ["airtrail"]
-      vars:
-        state: absent
-
-    - role: k8s-postgres
-      tags: ["postgres"]
-      vars:
-        state: absent
+    - role: undeploy
+      tags: ["undeploy"]
 

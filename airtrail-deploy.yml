@@ -7,7 +7,5 @@
       tags: ["setup-gcloud"]
     - role: k8s_postgres
       tags: ["postgres"]
-    - role: build_image
-      tags: ["build_image"] 
     - role: k8s_airtrail
       tags: ["airtrail"]

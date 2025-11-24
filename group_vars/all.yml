@@ -9,3 +9,11 @@ db_password: airtrail_secret
 # The Postgres Service name used by the role is `{{ db_host }}` (see postgres-service.yml).
 db_url: "postgres://{{ db_username }}:{{ db_password }}@{{ db_host }}:5432/{{ db_name }}"
 
+airtrail_image: "luis25franca/airtrail:v3" 
+pvc_name: postgres-pvc
+
+# BEGIN ANSIBLE MANAGED AIRTRAIL ENDPOINT
+# app endpoint (managed)
+app_ip: "34.27.78.157"
+app_port: "3000"
+# END ANSIBLE MANAGED AIRTRAIL ENDPOINT

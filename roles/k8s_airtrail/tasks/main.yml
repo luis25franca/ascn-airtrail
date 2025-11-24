@@ -28,6 +28,19 @@
     namespace: default
   register: airtrail_service_info
 
+- name: Wait for AirTrail LoadBalancer IP to be assigned
+  kubernetes.core.k8s_info:
+    kind: Service
+    name: airtrail-service  # Ensure this matches your service name
+    namespace: default
+  register: airtrail_service_info
+  # Keep retrying until the 'ingress' list exists
+  until: >-
+    airtrail_service_info.resources[0].status.loadBalancer.ingress is defined and
+    airtrail_service_info.resources[0].status.loadBalancer.ingress | length > 0
+  retries: 10
+  delay: 10
+  
 - name: "Set AirTrail external IP fact"
   set_fact:
     app_ip: >-
