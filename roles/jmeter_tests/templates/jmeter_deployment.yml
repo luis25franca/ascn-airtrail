@@ -1,0 +1,38 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: jmeter-airtrail-test
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: jmeter
+        image: justb4/jmeter:latest
+        command: ["jmeter"]
+        args:
+          - "-n"
+          - "-t"
+          - "/tests/airtrail-test.jmx"
+          - "-l"
+          - "/tests/results.jtl"
+          - "-e"
+          - "-o"
+          - "/tests/report"
+        volumeMounts:
+        - name: jmeter-tests
+          mountPath: /tests
+      volumes:
+      - name: jmeter-tests
+        configMap:
+          name: jmeter-test-config
+ 
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: jmeter-test-config
+data:
+  airtrail-test.jmx: |
+    ficheiro
+

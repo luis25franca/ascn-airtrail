@@ -1,0 +1,28 @@
+=== JMeter Test Statistics ===
+Test: /home/edinhopc/Documents/4ano/ASCN/GrupoTP-19/tests/airtrail-test.jmx
+Date: $(date)
+
+
+Total:
+  Sample Count: 2500
+  Error Count: 0
+  Error %: 0.0
+  Mean Response Time: 200.00440000000043ms
+  Median Response Time: 137.0ms
+  Min Response Time: 124.0ms
+  Max Response Time: 2086.0ms
+  Throughput: 183.39201877934272 req/sec
+  Received KB/sec: 2119.3050330793353
+  Sent KB/sec: 22.207627274061032
+
+HTTP Request:
+  Sample Count: 2500
+  Error Count: 0
+  Error %: 0.0
+  Mean Response Time: 200.00440000000043ms
+  Median Response Time: 137.0ms
+  Min Response Time: 124.0ms
+  Max Response Time: 2086.0ms
+  Throughput: 183.39201877934272 req/sec
+  Received KB/sec: 2119.3050330793353
+  Sent KB/sec: 22.207627274061032

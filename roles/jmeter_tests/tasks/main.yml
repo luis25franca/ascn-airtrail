@@ -1,0 +1,66 @@
+- name: Create results directory
+  file:
+    path: results
+    state: directory
+    mode: '0777'
+
+- name: Run JMeter tests
+  command: >
+    {{ jmeter_path }}/bin/jmeter.sh
+    -n
+    -t "{{ jmeter_test_file }}"
+    -l results/jmeter_results.jtl
+    -j results/jmeter.log
+    -e
+    -o results/report
+  register: jmeter_results
+
+- name: Display JMeter test results
+  debug:
+    msg: "{{ jmeter_results.stdout }}"
+
+- name: Extract statistics to text file
+  shell: |
+    python3 << 'EOF'
+    import json
+    
+    with open('results/report/statistics.json', 'r') as f:
+      stats = json.load(f)
+    
+    with open('results/statistics.txt', 'w') as out:
+      out.write("=== JMeter Test Statistics ===\n")
+      out.write("Test: {{ jmeter_test_file }}\n")
+      out.write("Date: $(date)\n\n")
+      
+      for transaction, data in stats.items():
+        out.write(f"\n{transaction}:\n")
+        out.write(f"  Sample Count: {data['sampleCount']}\n")
+        out.write(f"  Error Count: {data['errorCount']}\n")
+        out.write(f"  Error %: {data['errorPct']}\n")
+        out.write(f"  Mean Response Time: {data['meanResTime']}ms\n")
+        out.write(f"  Median Response Time: {data['medianResTime']}ms\n")
+        out.write(f"  Min Response Time: {data['minResTime']}ms\n")
+        out.write(f"  Max Response Time: {data['maxResTime']}ms\n")
+        out.write(f"  Throughput: {data['throughput']} req/sec\n")
+        out.write(f"  Received KB/sec: {data['receivedKBytesPerSec']}\n")
+        out.write(f"  Sent KB/sec: {data['sentKBytesPerSec']}\n")
+    EOF
+  register: stats_output
+
+- name: Display statistics file
+  debug:
+    msg: "{{ lookup('file', 'results/statistics.txt') }}"
+
+- name: Clean up results directory
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - results/report
+    - results/jmeter_results.jtl
+    - results/jmeter.log
+
+- name: Verify statistics file exists
+  stat:
+    path: results/statistics.txt
+  register: stats_file
