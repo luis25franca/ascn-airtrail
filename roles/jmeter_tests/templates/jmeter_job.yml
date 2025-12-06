@@ -2,6 +2,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: jmeter-airtrail-test
+  namespace: default
 spec:
   template:
     spec:
@@ -25,14 +26,5 @@ spec:
       volumes:
       - name: jmeter-tests
         configMap:
-          name: jmeter-test-config
+          name: jmeter_pvc
  
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: jmeter-test-config
-data:
-  airtrail-test.jmx: |
-    ficheiro
-

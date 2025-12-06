@@ -51,9 +51,9 @@
   set_fact:
     app_port: "{{ airtrail_service_info.resources[0].spec.ports[0].port }}"
 
-- name: Persist app endpoint to group_vars/all.yml (idempotent)
+- name: Persist app endpoint to group_vars/all/all.yml (idempotent)
   ansible.builtin.blockinfile:
-    path: group_vars/all.yml
+    path: group_vars/all/all.yml
     create: yes
     marker: "# {mark} ANSIBLE MANAGED AIRTRAIL ENDPOINT"
     block: |
