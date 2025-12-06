@@ -2,31 +2,39 @@
   file:
     path: results
     state: directory
-    mode: '0777'
+    mode: "0777"
 
-- name: Run JMeter tests
-  command: >
-    {{ jmeter_path }}/bin/jmeter.sh
-    -n
-    -t "{{ jmeter_test_file }}"
-    -l results/jmeter_results.jtl
-    -j results/jmeter.log
-    -e
-    -o results/report
-  register: jmeter_results
+- name: "Deploy JMeter"
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', 'jmeter-deployment.yml') | from_yaml }}"
+    wait: true
 
-- name: Display JMeter test results
-  debug:
-    msg: "{{ jmeter_results.stdout }}"
+- name: "Wait for JMeter Job to complete"
+  kubernetes.core.k8s_info:
+    api_version: batch/v1
+    kind: Job
+    name: jmeter-airtrail-test
+    namespace: default
+    wait: true
+    wait_sleep: 10
+    wait_timeout: 600
+
+- name: Get JMeter pod name
+  command: kubectl get pods --selector=job-name=jmeter-airtrail-test -o jsonpath='{.items[0].metadata.name}'
+  register: jmeter_pod
+
+- name: Copy JMeter results from pod
+  command: kubectl cp {{ jmeter_pod.stdout }}:/tests ./results
 
 - name: Extract statistics to text file
   shell: |
     python3 << 'EOF'
     import json
-    
+
     with open('results/report/statistics.json', 'r') as f:
       stats = json.load(f)
-    
+
     with open('results/statistics.txt', 'w') as out:
       out.write("=== JMeter Test Statistics ===\n")
       out.write("Test: {{ jmeter_test_file }}\n")

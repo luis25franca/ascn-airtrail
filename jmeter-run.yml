@@ -2,5 +2,7 @@
   hosts: localhost
   gather_facts: false
   roles:
+    - role: gcp_vm_create
+      tags: ["gcp_vm_create"]
     - role: jmeter_tests
       tags: ["jmeter_tests"]

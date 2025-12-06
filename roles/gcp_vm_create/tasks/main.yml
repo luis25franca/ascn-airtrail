@@ -1,3 +1,6 @@
-- name: Create load VM instance
-  shell: gcloud compute instances create {{ vm }} --machine-type {{machine_type}} --image-family ubuntu-2004-lts --image-project ubuntu-os-cloud --zone {{load_vm_zone}} --labels vm=load
+- name: Create load VM instance from template
+  shell: >
+    gcloud compute instances create {{ vm }}
+    --source-instance-template={{ vm_template }}
+    --zone {{ load_vm_zone }}
   register: gcloud_result
