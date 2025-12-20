@@ -33,4 +33,11 @@ spec:
           value: "{{ db_password }}"
         ports:
         - containerPort: 3000
+        resources:
+          requests:
+            cpu: {{ cpu_request | default('100m') }}
+            memory: {{ memory_request | default('128Mi') }}
+          limits:
+            cpu: {{ cpu_limit | default('500m') }}
+            memory: {{ memory_limit | default('512Mi') }}
 

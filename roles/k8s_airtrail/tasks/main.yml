@@ -10,6 +10,12 @@
     definition: "{{ lookup('template', 'airtrail-service.yml') | from_yaml }}"
     wait: true
 
+- name: "Deploy HorizontalPodAutoscaler for AirTrail"
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', 'airtrail-hpa.yml') | from_yaml }}"
+    wait: true
+
 - name: "Wait till AirTrail pod is created"
   kubernetes.core.k8s_info:
     kind: Pod

@@ -1,1 +1,12 @@
-airtrail_image: "luis25franca/airtrail:v3"   
+airtrail_image: "luis25franca/airtrail:v3"
+
+# Horizontal Pod Autoscaler Configuration
+hpa_min_replicas: 1
+hpa_max_replicas: 5
+hpa_cpu_target: 75
+
+# Resource Requests and Limits
+cpu_request: "100m"
+memory_request: "128Mi"
+cpu_limit: "500m"
+memory_limit: "512Mi"   
