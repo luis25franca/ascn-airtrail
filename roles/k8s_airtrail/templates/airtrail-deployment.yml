@@ -20,17 +20,35 @@ spec:
         image: "{{ airtrail_image }}"
         env:
         - name: DATABASE_URL
-          value: "{{ db_url }}"
+          valueFrom:
+            secretKeyRef:
+              name: airtrail-secret
+              key: database-url
         - name: DB_HOST
-          value: "{{ db_host }}"
+          valueFrom:
+            secretKeyRef:
+              name: airtrail-secret
+              key: db-host
         - name: DB_URL
-          value: "{{ db_url }}"
+          valueFrom:
+            secretKeyRef:
+              name: airtrail-secret
+              key: database-url
         - name: DB_DATABASE_NAME
-          value: "{{ db_name }}"
+          valueFrom:
+            secretKeyRef:
+              name: airtrail-secret
+              key: db-name
         - name: DB_USERNAME
-          value: "{{ db_username }}"
+          valueFrom:
+            secretKeyRef:
+              name: airtrail-secret
+              key: db-username
         - name: DB_PASSWORD
-          value: "{{ db_password }}"
+          valueFrom:
+            secretKeyRef:
+              name: airtrail-secret
+              key: db-password
         ports:
         - containerPort: 3000
         resources:

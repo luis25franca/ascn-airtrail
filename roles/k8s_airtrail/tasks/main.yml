@@ -1,3 +1,9 @@
+- name: "Create AirTrail Secret"
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', 'airtrail-secret.yml') | from_yaml }}"
+    wait: true
+
 - name: "Deploy AirTrail"
   kubernetes.core.k8s:
     state: present

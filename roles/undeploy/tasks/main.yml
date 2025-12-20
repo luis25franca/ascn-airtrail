@@ -1,3 +1,9 @@
+- name: "Remove AirTrail HPA"
+  kubernetes.core.k8s:
+    state: absent
+    definition: "{{ lookup('template', '../k8s_airtrail/templates/airtrail-hpa.yml') | from_yaml }}"
+  ignore_errors: false
+
 - name: "Remove AirTrail deployment"
   kubernetes.core.k8s:
     state: absent
@@ -10,6 +16,12 @@
     definition: "{{ lookup('template', '../k8s_airtrail/templates/airtrail-service.yml') | from_yaml }}"
   ignore_errors: false
 
+- name: "Remove AirTrail Secret"
+  kubernetes.core.k8s:
+    state: absent
+    definition: "{{ lookup('template', '../k8s_airtrail/templates/airtrail-secret.yml') | from_yaml }}"
+  ignore_errors: false
+
 - name: "Remove Postgres deployment"
   kubernetes.core.k8s:
     state: absent
@@ -20,6 +32,12 @@
   kubernetes.core.k8s:
     state: absent
     definition: "{{ lookup('template', '../k8s_postgres/templates/postgres-service.yml') | from_yaml }}"
+  ignore_errors: false
+
+- name: "Remove Postgres Secret"
+  kubernetes.core.k8s:
+    state: absent
+    definition: "{{ lookup('template', '../k8s_postgres/templates/postgres-secret.yml') | from_yaml }}"
   ignore_errors: false
 
 - name: "Remove AirTrail endpoint from group_vars"
