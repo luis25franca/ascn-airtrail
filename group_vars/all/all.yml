@@ -12,8 +12,11 @@ db_url: "postgres://{{ db_username }}:{{ db_password }}@{{ db_host }}:5432/{{ db
 airtrail_image: "luis25franca/airtrail:v3" 
 pvc_name: postgres-pvc
 
+load_test_file: "tests/airtrail-test.jmx"
+
+
 # BEGIN ANSIBLE MANAGED AIRTRAIL ENDPOINT
 # app endpoint (managed)
-app_ip: "34.61.161.31"
+app_ip: "34.41.210.2"
 app_port: "3000"
 # END ANSIBLE MANAGED AIRTRAIL ENDPOINT

@@ -1,0 +1,13 @@
+- name: "GCP VM Creation"
+  hosts: localhost
+  gather_facts: false
+  roles:
+    - role: gcp_vm_create
+      tags: ["vm_create"]
+
+- name: "JMeter Provision"
+  hosts: jmeter_vm
+  gather_facts: false
+  roles:
+    - role: jmeter_provision
+      tags: ["jmeter_provision"]

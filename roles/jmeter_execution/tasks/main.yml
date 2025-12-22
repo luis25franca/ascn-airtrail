@@ -1,0 +1,43 @@
+- name: Create results directory
+  file:
+    path: "{{ jmeter_dir }}/results"
+    state: absent
+
+- name: Create results directory
+  file:
+    path: "{{ jmeter_dir }}/results"
+    state: directory
+    mode: "0755"
+
+- name: Copy JMeter test file
+  copy:
+    src: "{{ load_test_file }}"
+    dest: "{{ jmeter_dir }}/tests/test.jmx"
+
+- name: Run JMeter
+  command:
+    argv:
+      - "{{ jmeter_dir }}/apache-jmeter-5.6.3/bin/jmeter"
+      - -n
+      - -t
+      - "{{ jmeter_dir }}/tests/test.jmx"
+      - -l
+      - "{{ jmeter_dir }}/results/results.jtl"
+      - -e
+      - -o
+      - "{{ jmeter_dir }}/results/report"
+  environment:
+    JAVA_HOME: "{{ jmeter_dir }}/java/jdk-11"
+    PATH: "{{ jmeter_dir }}/java/jdk-11/bin:{{ ansible_env.PATH }}"
+
+- name: Archive JMeter results
+  archive:
+    path: "{{ jmeter_dir }}/results/"
+    dest: "{{ jmeter_dir }}/results.tar.gz"
+    format: gz
+
+- name: Fetch JMeter results
+  fetch:
+    src: "{{ jmeter_dir }}/results.tar.gz"
+    dest: results/
+    flat: yes

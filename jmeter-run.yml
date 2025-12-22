@@ -1,8 +1,57 @@
-- name: "JMeter Test Deployment"
-  hosts: localhost
+- name: "JMeter Execution"
+  hosts: jmeter_vm
   gather_facts: false
   roles:
-    - role: gcp_vm_create
-      tags: ["gcp_vm_create"]
-    - role: jmeter_tests
-      tags: ["jmeter_tests"]
+    - role: jmeter_execution
+      tags: ["jmeter_execution"]
+  
+- name: Extract statistics
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Extract results archive
+      unarchive:
+        src: results/results.tar.gz
+        dest: results/
+        remote_src: no
+
+    - name: List extracted files
+      command: find results -type f -name "statistics.json"
+      register: stats_file
+
+    - name: Debug statistics file location
+      debug:
+        var: stats_file.stdout_lines
+
+    - name: Parse statistics
+      shell: |
+        python3 << 'EOF'
+        import json
+        import os
+        import glob
+
+        stats_files = glob.glob('results/**/statistics.json', recursive=True)
+        if not stats_files:
+            print("No statistics.json file found!")
+            exit(1)
+        
+        stats_file = stats_files[0]
+        print(f"Using statistics file: {stats_file}")
+
+        with open(stats_file) as f:
+            stats = json.load(f)
+
+        with open('results/statistics.txt', 'w') as out:
+            out.write("=== JMeter Test Statistics ===\n")
+            out.write("Test: {{ load_test_file }}\n\n")
+
+            for transaction, data in stats.items():
+                out.write(f"\n{transaction}:\n")
+                out.write(f"  Sample Count: {data['sampleCount']}\n")
+                out.write(f"  Error Count: {data['errorCount']}\n")
+                out.write(f"  Error %: {data['errorPct']}\n")
+                out.write(f"  Mean Response Time: {data['meanResTime']}ms\n")
+                out.write(f"  Throughput: {data['throughput']} req/sec\n")
+        EOF
+
+

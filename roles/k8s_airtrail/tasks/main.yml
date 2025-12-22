@@ -61,3 +61,9 @@
       app_ip: "{{ app_ip | default('') }}"
       app_port: "{{ app_port | default('') }}"
   when: app_ip is defined and app_ip | length > 0
+
+- name: Change Destination IP in JMETER test file
+  replace:
+    path: "{{ load_test_file }}"
+    regexp: '<stringProp name="HTTPSampler.domain">.*?</stringProp>'
+    replace: '<stringProp name="HTTPSampler.domain">{{ app_ip }}</stringProp>'

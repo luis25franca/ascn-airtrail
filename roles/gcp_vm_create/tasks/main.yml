@@ -1,10 +1,48 @@
-- name: Create VM from regional template
-  google.cloud.gcp_compute_instance:
-    name: "{{ vm }}"
-    zone: "{{ load_vm_zone }}"
-    source_instance_template: "projects/{{ gcp_project }}/regions/{{ template_region }}/instanceTemplates/{{ vm_template }}"
-    project: "{{ gcp_project }}"
-    auth_kind: "{{ gcp_auth_kind }}"
-    service_account_file: "{{ gcp_cred_file }}"
-    state: present
+- name: Create JMeter VM directly
+  ansible.builtin.command:
+    cmd: >
+      gcloud compute instances create {{ vm }}
+      --zone={{ load_vm_zone }}
+      --machine-type=e2-standard-4
+      --image-family=debian-12
+      --image-project=debian-cloud
+      --project={{ gcp_project }}
   register: gcloud_result
+  failed_when: 
+    - gcloud_result.rc != 0 
+    - "'already exists' not in gcloud_result.stderr"
+  changed_when: "gcloud_result.rc == 0"
+
+- name: Get VM external IP
+  ansible.builtin.command:
+    cmd: >
+      gcloud compute instances describe {{ vm }}
+      --zone={{ load_vm_zone }}
+      --project={{ gcp_project }}
+      --format='get(networkInterfaces[0].accessConfigs[0].natIP)'
+  register: vm_ip
+
+
+- name: Wait for SSH
+  ansible.builtin.wait_for:
+    host: "{{ vm_ip.stdout }}"
+    port: 22
+    timeout: 300
+
+
+- name: Add VM to persistent inventory file
+  delegate_to: localhost
+  ansible.builtin.lineinfile:
+    path: ./inventory/hosts.ini  
+    create: yes
+    regexp: "^{{ vm }} "
+    line: "{{ vm }} ansible_host={{ vm_ip.stdout }} ansible_user=debian ansible_python_interpreter=/usr/bin/python3"
+    insertafter: "[jmeter_vm]"
+
+- name: Add VM to current memory
+  ansible.builtin.add_host:
+    name: "{{ vm }}"
+    ansible_host: "{{ vm_ip.stdout }}"
+    ansible_user: debian
+    ansible_python_interpreter: /usr/bin/python3
+    groups: jmeter_vm
