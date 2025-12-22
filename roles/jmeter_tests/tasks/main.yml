@@ -1,82 +1,97 @@
+- name: Create JMeter directory
+  file:
+    path: "{{ jmeter_dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Download OpenJDK
+  get_url:
+    url: https://download.java.net/openjdk/jdk11/ri/openjdk-11+28_linux-x64_bin.tar.gz
+    dest: "{{ jmeter_dir }}/openjdk.tar.gz"
+
+- name: Create Java directory
+  file:
+    path: "{{ jmeter_dir }}/java"
+    state: directory
+    mode: "0755"
+
+- name: Extract OpenJDK
+  unarchive:
+    src: "{{ jmeter_dir }}/openjdk.tar.gz"
+    dest: "{{ jmeter_dir }}/java"
+    remote_src: true
+
+- name: Set JAVA_HOME and PATH
+  lineinfile:
+    path: "{{ jmeter_dir }}/.bashrc"
+    line: 'export JAVA_HOME={{ jmeter_dir }}/java && export PATH=$JAVA_HOME/bin:$PATH'
+    create: yes
+
+
+- name: Download JMeter
+  get_url:
+    url: https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-5.6.3.tgz
+    dest: "{{ jmeter_dir }}/jmeter.tgz"
+
+- name: Extract JMeter
+  unarchive:
+    src: "{{ jmeter_dir }}/jmeter.tgz"
+    dest: "{{ jmeter_dir }}"
+    remote_src: true
+
+
 - name: Create results directory
   file:
-    path: results
-    state: directory
-    mode: "0777"
-
-- name: Delete old JMeter Job if exists
-  kubernetes.core.k8s:
+    path: "{{ jmeter_dir }}/results"
     state: absent
-    api_version: batch/v1
-    kind: Job
-    name: jmeter-airtrail-test
-    namespace: default
 
-- name: "Deploy JMeter"
-  kubernetes.core.k8s:
-    state: present
-    definition: "{{ lookup('template', 'jmeter_job.yml') | from_yaml }}"
-    wait: true
-
-- name: "Wait for JMeter Job to complete"
-  kubernetes.core.k8s_info:
-    api_version: batch/v1
-    kind: Job
-    name: jmeter-airtrail-test
-    namespace: default
-    wait: true
-    wait_sleep: 10
-    wait_timeout: 600
-
-- name: Get JMeter pod name
-  command: kubectl get pods --selector=job-name=jmeter-airtrail-test -o jsonpath='{.items[0].metadata.name}'
-  register: jmeter_pod
-
-- name: Copy JMeter results from pod
-  command: kubectl cp {{ jmeter_pod.stdout }}:/tests ./results
-
-- name: Extract statistics to text file
-  shell: |
-    python3 << 'EOF'
-    import json
-
-    with open('results/report/statistics.json', 'r') as f:
-      stats = json.load(f)
-
-    with open('results/statistics.txt', 'w') as out:
-      out.write("=== JMeter Test Statistics ===\n")
-      out.write("Test: {{ jmeter_test_file }}\n")
-      out.write("Date: $(date)\n\n")
-      
-      for transaction, data in stats.items():
-        out.write(f"\n{transaction}:\n")
-        out.write(f"  Sample Count: {data['sampleCount']}\n")
-        out.write(f"  Error Count: {data['errorCount']}\n")
-        out.write(f"  Error %: {data['errorPct']}\n")
-        out.write(f"  Mean Response Time: {data['meanResTime']}ms\n")
-        out.write(f"  Median Response Time: {data['medianResTime']}ms\n")
-        out.write(f"  Min Response Time: {data['minResTime']}ms\n")
-        out.write(f"  Max Response Time: {data['maxResTime']}ms\n")
-        out.write(f"  Throughput: {data['throughput']} req/sec\n")
-        out.write(f"  Received KB/sec: {data['receivedKBytesPerSec']}\n")
-        out.write(f"  Sent KB/sec: {data['sentKBytesPerSec']}\n")
-    EOF
-  register: stats_output
-
-- name: Display statistics file
-  debug:
-    msg: "{{ lookup('file', 'results/statistics.txt') }}"
-
-- name: Clean up results directory
+- name: Create results directory
   file:
-    path: "{{ item }}"
-    state: absent
-  loop:
-    - results/report
-    - results/jmeter_results.jtl
-    - results/jmeter.log
+    path: "{{ jmeter_dir }}/results"
+    state: directory
+    mode: "0755"
 
-- name: Verify statistics file exists
-  stat:
-    path: results/statistics.txt
-  register: stats_file
+- name: Create tests directory
+  file:
+    path: "{{ jmeter_dir }}/tests"
+    state: directory
+    mode: "0755"
+
+
+- name: Copy JMeter test file
+  copy:
+    src: "{{ load_test_file }}"
+    dest: "{{ jmeter_dir }}/tests/test.jmx"
+
+
+- name: Run JMeter
+  command:
+    argv:
+      - "{{ jmeter_dir }}/apache-jmeter-5.6.3/bin/jmeter"
+      - -n
+      - -t
+      - "{{ jmeter_dir }}/tests/test.jmx"
+      - -l
+      - "{{ jmeter_dir }}/results/results.jtl"
+      - -e
+      - -o
+      - "{{ jmeter_dir }}/results/report"
+  environment:
+    JAVA_HOME: "{{ jmeter_dir }}/java/jdk-11"
+    PATH: "{{ jmeter_dir }}/java/jdk-11/bin:{{ ansible_env.PATH }}"
+
+
+- name: Archive JMeter results
+  archive:
+    path: "{{ jmeter_dir }}/results/"
+    dest: "{{ jmeter_dir }}/results.tar.gz"
+    format: gz
+
+- name: Fetch JMeter results
+  fetch:
+    src: "{{ jmeter_dir }}/results.tar.gz"
+    dest: results/
+    flat: yes
+
+
+

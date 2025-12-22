@@ -1,4 +1,0 @@
----
-# Defaults for jmeter
-# If pvc_storage_class is empty, the cluster default StorageClass will be used.
-pvc_storage_class: ""

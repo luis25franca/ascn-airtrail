@@ -6,3 +6,5 @@ vm_template: ascn-template-1
 load_vm_zone: us-central1-a
 
 template_region: us-central1
+
+vm_ssh_user: ansible

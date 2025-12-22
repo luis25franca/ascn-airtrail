@@ -1,0 +1,8 @@
+- name: Destroy VM using gcloud
+  ansible.builtin.command:
+    cmd: >
+      gcloud compute instances delete {{ vm }}
+      --zone={{ load_vm_zone }}
+      --project={{ gcp_project }}
+      --quiet
+  register: gcloud_result

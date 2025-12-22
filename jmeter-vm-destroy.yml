@@ -1,0 +1,6 @@
+- name: "GCP VM Destroy"
+  hosts: localhost
+  gather_facts: false
+  roles:
+    - role: gcp_vm_destroy
+      tags: ["vm_destroy"]
