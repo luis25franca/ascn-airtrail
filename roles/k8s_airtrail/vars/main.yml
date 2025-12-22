@@ -1,6 +1,10 @@
 airtrail_image: "luis25franca/airtrail:v3"
 
+# Replica Configuration for Benchmarking
+initial_replicas: 1  # Set this to desired replica count for testing
+
 # Horizontal Pod Autoscaler Configuration
+hpa_enabled: true  # Set to false to disable HPA during benchmarking
 hpa_min_replicas: 1
 hpa_max_replicas: 5
 hpa_cpu_target: 75

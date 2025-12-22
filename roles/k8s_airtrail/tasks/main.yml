@@ -21,6 +21,7 @@
     state: present
     definition: "{{ lookup('template', 'airtrail-hpa.yml') | from_yaml }}"
     wait: true
+  when: hpa_enabled | default(true) | bool
 
 - name: "Wait till AirTrail pod is created"
   kubernetes.core.k8s_info:
