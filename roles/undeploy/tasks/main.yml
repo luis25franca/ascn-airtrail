@@ -42,7 +42,7 @@
 
 - name: "Remove AirTrail endpoint from group_vars"
   ansible.builtin.blockinfile:
-    path: group_vars/all.yml
+    path: group_vars/all/all.yml
     marker: "# {mark} ANSIBLE MANAGED AIRTRAIL ENDPOINT"
     state: absent
 
