@@ -80,3 +80,9 @@
     path: "{{ load_test_file }}"
     regexp: '<stringProp name="HTTPSampler.domain">.*?</stringProp>'
     replace: '<stringProp name="HTTPSampler.domain">{{ app_ip }}</stringProp>'
+
+- name: Change Destination IP in JMETER test file
+  replace:
+    path: "{{ load_test_file_long }}"
+    regexp: '<stringProp name="HTTPSampler.domain">.*?</stringProp>'
+    replace: '<stringProp name="HTTPSampler.domain">{{ app_ip }}</stringProp>'

@@ -21,6 +21,13 @@ spec:
       containers:
       - name: postgres
         image: "{{ db_image }}"
+        resources:
+          requests:
+            cpu: "150m"
+            memory: "256Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
         env:
         - name: POSTGRES_ALLOW_EMPTY_PASSWORD
           value: "false"

@@ -13,10 +13,11 @@ airtrail_image: "luis25franca/airtrail:v3"
 pvc_name: postgres-pvc
 
 load_test_file: "tests/airtrail-test.jmx"
+load_test_file_long: "tests/airtrail-test-long.jmx"
 
 
 # BEGIN ANSIBLE MANAGED AIRTRAIL ENDPOINT
 # app endpoint (managed)
-app_ip: "34.171.199.112"
+app_ip: "34.9.171.145"
 app_port: "3000"
 # END ANSIBLE MANAGED AIRTRAIL ENDPOINT

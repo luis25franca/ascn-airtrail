@@ -11,7 +11,7 @@
 
 - name: Copy JMeter test file
   copy:
-    src: "{{ load_test_file }}"
+    src: "tests/{{ test_type | default('airtrail-test') }}.jmx"
     dest: "{{ jmeter_dir }}/tests/test.jmx"
 
 - name: Run JMeter

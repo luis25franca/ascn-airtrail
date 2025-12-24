@@ -5,12 +5,12 @@ initial_replicas: 1  # Set this to desired replica count for testing
 
 # Horizontal Pod Autoscaler Configuration
 hpa_enabled: true  # Set to false to disable HPA during benchmarking
-hpa_min_replicas: 1
-hpa_max_replicas: 10
-hpa_cpu_target: 75
+hpa_min_replicas: 2
+hpa_max_replicas: 5
+hpa_cpu_target: 60
 
 # Resource Requests and Limits
 cpu_request: "100m"
-memory_request: "128Mi"
-cpu_limit: "500m"
-memory_limit: "512Mi"   
+memory_request: "256Mi"
+cpu_limit: "500m" #unused
+memory_limit: "512Mi" # unused  
