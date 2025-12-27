@@ -40,6 +40,13 @@
     definition: "{{ lookup('template', '../k8s_postgres/templates/postgres-secret.yml') | from_yaml }}"
   ignore_errors: false
 
+- name: "Remove Postgres PVC"
+  kubernetes.core.k8s:
+    state: absent
+    definition: "{{ lookup('template', '../k8s_postgres/templates/postgres-pvc.yml') | from_yaml }}"
+  ignore_errors: false
+  when: delete_data | default(false) | bool
+
 - name: "Remove AirTrail endpoint from group_vars"
   ansible.builtin.blockinfile:
     path: group_vars/all/all.yml
