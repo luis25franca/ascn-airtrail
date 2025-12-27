@@ -1,3 +1,9 @@
+- name: "Create AirTrail Secret"
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', 'airtrail-secret.yml') | from_yaml }}"
+    wait: true
+
 - name: "Deploy AirTrail"
   kubernetes.core.k8s:
     state: present
@@ -9,6 +15,13 @@
     state: present
     definition: "{{ lookup('template', 'airtrail-service.yml') | from_yaml }}"
     wait: true
+
+- name: "Deploy HorizontalPodAutoscaler for AirTrail"
+  kubernetes.core.k8s:
+    state: present
+    definition: "{{ lookup('template', 'airtrail-hpa.yml') | from_yaml }}"
+    wait: true
+  when: hpa_enabled | default(true) | bool
 
 - name: "Wait till AirTrail pod is created"
   kubernetes.core.k8s_info:
@@ -65,5 +78,11 @@
 - name: Change Destination IP in JMETER test file
   replace:
     path: "{{ load_test_file }}"
+    regexp: '<stringProp name="HTTPSampler.domain">.*?</stringProp>'
+    replace: '<stringProp name="HTTPSampler.domain">{{ app_ip }}</stringProp>'
+
+- name: Change Destination IP in JMETER test file
+  replace:
+    path: "{{ load_test_file_long }}"
     regexp: '<stringProp name="HTTPSampler.domain">.*?</stringProp>'
     replace: '<stringProp name="HTTPSampler.domain">{{ app_ip }}</stringProp>'

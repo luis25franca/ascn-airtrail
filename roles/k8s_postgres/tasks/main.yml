@@ -4,6 +4,12 @@
     state: present
     wait: true
 
+- name: Create PostgreSQL Secret
+  kubernetes.core.k8s:
+    definition: "{{ lookup('template', 'postgres-secret.yml') | from_yaml }}"
+    state: present
+    wait: true
+
 - name: Create a Deployment for PostgreSQL
   kubernetes.core.k8s:
     definition: "{{ lookup('template', 'postgres-deployment.yml') | from_yaml }}"

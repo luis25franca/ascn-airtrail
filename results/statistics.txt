@@ -1,17 +1,17 @@
 === JMeter Test Statistics ===
-Test: tests/airtrail-test.jmx
+Test: tests/airtrail-test-long.jmx
 
 
 Total:
-  Sample Count: 2500
-  Error Count: 0
-  Error %: 0.0
-  Mean Response Time: 231.81199999999998ms
-  Throughput: 176.94104324439098 req/sec
+  Sample Count: 30007
+  Error Count: 5765
+  Error %: 19.212183
+  Mean Response Time: 7613.787982804042ms
+  Throughput: 95.9950606067392 req/sec
 
 HTTP Request:
-  Sample Count: 2500
-  Error Count: 0
-  Error %: 0.0
-  Mean Response Time: 231.81199999999998ms
-  Throughput: 176.94104324439098 req/sec
+  Sample Count: 30007
+  Error Count: 5765
+  Error %: 19.212183
+  Mean Response Time: 7613.787982804042ms
+  Throughput: 95.9950606067392 req/sec

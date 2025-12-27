@@ -3,9 +3,9 @@
     cmd: >
       gcloud compute instances create {{ vm }}
       --zone={{ load_vm_zone }}
-      --machine-type=e2-standard-4
-      --image-family=debian-12
-      --image-project=debian-cloud
+      --machine-type={{ vm_machine_type }}
+      --image-family={{ vm_image_family }}
+      --image-project={{ vm_image_project }}
       --project={{ gcp_project }}
   register: gcloud_result
   failed_when: 
