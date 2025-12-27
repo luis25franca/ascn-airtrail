@@ -55,7 +55,7 @@ spec:
           requests:
             cpu: {{ cpu_request | default('150m') }}
             memory: {{ memory_request | default('256Mi') }}
-#          limits:
-#            cpu: {{ cpu_limit | default('500m') }}
-#            memory: {{ memory_limit | default('512Mi') }}
+          limits:
+            cpu: {{ cpu_limit | default('500m') }}
+            memory: {{ memory_limit | default('512Mi') }}
 

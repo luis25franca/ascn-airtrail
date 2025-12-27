@@ -23,7 +23,7 @@
         </ConstantTimer>
         <hashTree/>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request">
-          <stringProp name="HTTPSampler.domain">34.9.171.145</stringProp>
+          <stringProp name="HTTPSampler.domain">35.223.201.36</stringProp>
           <stringProp name="HTTPSampler.port">3000</stringProp>
           <stringProp name="HTTPSampler.path">/login</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>

@@ -43,7 +43,7 @@
 
         with open('results/statistics.txt', 'w') as out:
             out.write("=== JMeter Test Statistics ===\n")
-            out.write("Test: {{ load_test_file }}\n\n")
+            out.write("Test: {{ load_test_file_long }}\n\n")
 
             for transaction, data in stats.items():
                 out.write(f"\n{transaction}:\n")
