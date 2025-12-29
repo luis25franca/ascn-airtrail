@@ -1,5 +1,8 @@
 airtrail_image: "luis25franca/airtrail:v3"
 
+# Session Affinity Configuration
+session_affinity_enabled: true  # Set to false to disable session affinity
+
 # Replica Configuration for Benchmarking
 initial_replicas: 2  # Set this to desired replica count for testing
 
